@@ -18,7 +18,7 @@ module.exports = {
   retries: 0,
   timeout: 30000,
   use: {
-    headless: true,
+    headless: false,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     viewport: { width: 1280, height: 720 }
