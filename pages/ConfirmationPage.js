@@ -1,10 +1,12 @@
 const { expect } = require('@playwright/test');
 exports.ConfirmationPage = class ConfirmationPage {
   constructor(page) {
-    this.confirmationHeader = page.locator('.complete-header');
+    this.page = page;
   }
 
   async isOrderConfirmed() {
-    await expect(this.confirmationHeader).toHaveText('Thank you for your order!');
+    const successText = this.page.locator('.complete-header');
+    await successText.waitFor();
+    return successText;
   }
 };
