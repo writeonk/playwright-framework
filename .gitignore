@@ -1,0 +1,34 @@
+# Node.js dependencies
+node_modules/
+
+# Playwright test reports
+playwright-report/
+test-results/
+
+# Node modules
+node_modules/
+
+# Allure results and reports
+allure-results/
+allure-report/
+
+# Local environment variables
+.env
+.env.local
+
+# VSCode / JetBrains IDE settings
+.vscode/
+.idea/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Optional: lock files (if using only yarn/npm)
+package-lock.json
+yarn.lock
