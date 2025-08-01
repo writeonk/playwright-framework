@@ -1,0 +1,44 @@
+name: 🧪 Daily Playwright Tests with Allure
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # ⏰ Run daily at 6 AM UTC
+  workflow_dispatch:     # 🧭 Allow manual run
+
+jobs:
+  test-and-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🐳 Build Playwright Docker image
+        run: docker build -t playwright-tests .
+
+      - name: 🧪 Run Playwright tests in container
+        run: |
+          docker run --rm \
+            --env-file .env \
+            -v ${{ github.workspace }}/allure-results:/app/allure-results \
+            playwright-tests
+
+      - name: 📊 Generate Allure Report (in separate container)
+        uses: addnab/docker-run-action@v3
+        with:
+          image: frankescobar/allure-docker-service
+          options: -v ${{ github.workspace }}/allure-results:/app/allure-results -v ${{ github.workspace }}/allure-report:/app/allure-report
+          run: allure generate /app/allure-results --clean -o /app/allure-report
+
+      - name: 📁 Upload Allure Report (artifact for team)
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: allure-report
+
+      - name: 🔔 Notify Slack on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          message: '❌ Playwright tests failed. See Allure report in GitHub Actions artifacts.'
