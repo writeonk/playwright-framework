@@ -1,4 +1,20 @@
-module.exports = {
+// playwright.config.js
+const { defineConfig } = require('@playwright/test');
+
+module.exports = defineConfig({
+  testDir: './tests',
+  timeout: 30000,
+  retries: 0,
+  use: {
+    headless: true,
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    viewport: { width: 1280, height: 720 }
+  },
+  reporter: [
+    ['list'], // or 'html' for local debugging
+    ['allure-playwright', { outputFolder: 'allure-results' }]
+  ],
   projects: [
     {
       name: 'Chromium',
@@ -13,14 +29,4 @@ module.exports = {
       use: { browserName: 'webkit' },
     }
   ],
-  reporter: [['html'], ['allure-playwright']],
-  testDir: './tests',
-  retries: 0,
-  timeout: 30000,
-  use: {
-    headless: true,
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    viewport: { width: 1280, height: 720 }
-  }
-};
+});
